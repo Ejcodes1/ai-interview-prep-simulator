@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Upload Resume &amp; Job Description{% endblock %}
+{% block content %}
+  <section class="card">
+    <h2>Step 1: Upload your resume and job description</h2>
+    <p>
+      Search for a live job posting is coming in a later work package (WP-03).
+      For now, paste or upload the job description directly (FR-05).
+    </p>
+
+    {% if error %}
+      <p class="error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('web.ingest_view') }}" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="resume">Resume (PDF or DOCX)</label>
+        <input type="file" id="resume" name="resume" accept=".pdf,.docx" required>
+      </div>
+
+      <div class="form-group">
+        <label for="job_description">Job description (paste text)</label>
+        <textarea id="job_description" name="job_description" rows="8"
+          placeholder="Paste the job description here..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="job_description_file">...or upload a job description file (PDF, DOCX, or TXT)</label>
+        <input type="file" id="job_description_file" name="job_description_file" accept=".pdf,.docx,.txt">
+      </div>
+
+      <button type="submit">Extract role &amp; skills</button>
+    </form>
+  </section>
+{% endblock %}

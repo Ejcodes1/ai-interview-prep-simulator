@@ -1,0 +1,26 @@
+# Environment / secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# SQLite database (session-scoped, NFR-03: not persisted beyond a session)
+instance/*.db
+instance/*.sqlite3
+
+# Generated PDF reports (WP-07)
+reports/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store

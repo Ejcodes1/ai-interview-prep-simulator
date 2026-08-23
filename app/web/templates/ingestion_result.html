@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Extraction Results{% endblock %}
+{% block content %}
+  <section class="card">
+    <h2>Extracted role &amp; skills (FR-06)</h2>
+    {% if result.role %}
+      <p><strong>Detected role:</strong> {{ result.role }}</p>
+    {% else %}
+      <p><strong>Detected role:</strong> <em>could not be determined</em></p>
+    {% endif %}
+
+    <p><strong>Key skills/terms found ({{ result.skills|length }}):</strong></p>
+    <ul class="skill-list">
+      {% for skill in result.skills %}
+        <li>{{ skill }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Resume text (preview)</h2>
+    <pre class="text-preview">{{ result.resume_text[:1000] }}{% if result.resume_text|length > 1000 %}…{% endif %}</pre>
+  </section>
+
+  <section class="card">
+    <h2>Job description text (preview)</h2>
+    <pre class="text-preview">{{ result.job_description_text[:1000] }}{% if result.job_description_text|length > 1000 %}…{% endif %}</pre>
+  </section>
+
+  <p class="next-steps">
+    Next: tailored question generation (WP-04), text/voice answer capture
+    (WP-05), and AI-scored feedback (WP-06) will build on this extracted
+    data in later work packages.
+  </p>
+
+  <p><a href="{{ url_for('web.index') }}">&larr; Start over</a></p>
+{% endblock %}
