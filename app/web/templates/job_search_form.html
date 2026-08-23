@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Search Job Postings{% endblock %}
+{% block content %}
+  <section class="card">
+    <h2>Search for a job posting (FR-02)</h2>
+    <p>Search real postings via the Adzuna API, then select one to use as your job description.</p>
+
+    {% if error %}
+      <p class="error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('web.job_search_view') }}" method="post">
+      <div class="form-group">
+        <label for="keyword">Job title / keyword</label>
+        <input type="text" id="keyword" name="keyword" value="{{ keyword or '' }}"
+          placeholder="e.g. software engineer intern" required>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location (optional)</label>
+        <input type="text" id="location" name="location" value="{{ location or '' }}"
+          placeholder="e.g. San Francisco">
+      </div>
+
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <p><a href="{{ url_for('web.index') }}">&larr; Back to manual entry</a></p>
+{% endblock %}

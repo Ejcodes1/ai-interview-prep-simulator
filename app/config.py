@@ -27,6 +27,7 @@ class BaseConfig:
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
     ADZUNA_APP_ID = os.environ.get("ADZUNA_APP_ID")
     ADZUNA_APP_KEY = os.environ.get("ADZUNA_APP_KEY")
+    ADZUNA_COUNTRY = os.environ.get("ADZUNA_COUNTRY", "us")
 
     # NFR-07: cap LLM calls per session to bound usage cost.
     MAX_LLM_CALLS_PER_SESSION = int(os.environ.get("MAX_LLM_CALLS_PER_SESSION", 20))

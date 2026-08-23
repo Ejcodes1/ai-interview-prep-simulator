@@ -66,6 +66,33 @@ button:hover { opacity: 0.9; }
   font-weight: 600;
 }
 
+.notice {
+  background: #e4f1ef;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.warning {
+  background: #fff4e0;
+  border: 1px solid #c98a1f;
+  border-radius: 4px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.job-result {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.job-result h3 { margin: 0 0 0.25rem; }
+.job-result .company { color: var(--muted); margin: 0 0 0.5rem; font-size: 0.9rem; }
+.job-result .summary { margin: 0 0 0.75rem; font-size: 0.9rem; }
+.job-result button { font-size: 0.9rem; padding: 0.4rem 0.9rem; }
+
 .skill-list {
   display: flex;
   flex-wrap: wrap;

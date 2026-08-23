@@ -4,12 +4,19 @@
   <section class="card">
     <h2>Step 1: Upload your resume and job description</h2>
     <p>
-      Search for a live job posting is coming in a later work package (WP-03).
-      For now, paste or upload the job description directly (FR-05).
+      Search for a real job posting (<a href="{{ url_for('web.job_search_form') }}">try it</a>, FR-02-FR-04),
+      or paste/upload the job description directly below (FR-05).
     </p>
 
     {% if error %}
       <p class="error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    {% if prefill_job_title %}
+      <p class="notice">
+        Job posting selected: <strong>{{ prefill_job_title }}</strong>{% if prefill_job_company %} at {{ prefill_job_company }}{% endif %} —
+        its description has been filled in below. Edit it if you'd like before continuing.
+      </p>
     {% endif %}
 
     <form action="{{ url_for('web.ingest_view') }}" method="post" enctype="multipart/form-data">
@@ -19,9 +26,9 @@
       </div>
 
       <div class="form-group">
-        <label for="job_description">Job description (paste text)</label>
+        <label for="job_description">Job description (paste text, or selected from search)</label>
         <textarea id="job_description" name="job_description" rows="8"
-          placeholder="Paste the job description here..."></textarea>
+          placeholder="Paste the job description here...">{{ prefill_job_description or "" }}</textarea>
       </div>
 
       <div class="form-group">
