@@ -1,7 +1,7 @@
-"""Feedback & Scoring Engine component (Component Diagram, Figure 5) — stub.
+"""Feedback & Scoring Engine component (Component Diagram, Figure 5) — WP-07.
 
-Planned for WP-07 (FR-13, FR-14). See `engine.py`.
+See `engine.py` for FR-13 and FR-14.
 """
-from .engine import ScoringError, compute_overall_score
+from .engine import ScoringError, compute_overall_score, record_feedback
 
-__all__ = ["ScoringError", "compute_overall_score"]
+__all__ = ["ScoringError", "compute_overall_score", "record_feedback"]

@@ -1,7 +1,7 @@
-"""PDF Report Generator component (Component Diagram, Figure 5) — stub.
+"""PDF Report Generator component (Component Diagram, Figure 5) — WP-07.
 
-Planned for WP-07 (FR-15). See `generator.py`.
+See `generator.py` for FR-15.
 """
-from .generator import ReportGenerationError, SessionReportData, generate_pdf_report
+from .generator import ReportGenerationError, generate_pdf_report
 
-__all__ = ["ReportGenerationError", "SessionReportData", "generate_pdf_report"]
+__all__ = ["ReportGenerationError", "generate_pdf_report"]

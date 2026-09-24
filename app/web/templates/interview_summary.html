@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Session Summary{% endblock %}
+{% block content %}
+  {% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+  {% endif %}
+
+  <section class="card">
+    <h2>Overall readiness score</h2>
+    <p class="score-display">{{ "%.0f"|format(session.readiness_report.overall_score) }}<span>/100</span></p>
+    <a class="btn" href="{{ url_for('web.interview_report_view', session_uuid=session.session_uuid) }}">Export PDF report</a>
+  </section>
+
+  {% for question in session.questions %}
+    <section class="card">
+      <p class="pill-tag">{{ question.type|capitalize }} question</p>
+      <h3>{{ question.text }}</h3>
+      <p><strong>Your answer:</strong> {{ question.answer.text }}</p>
+      {% if question.answer.feedback %}
+        <p><strong>Score:</strong> {{ "%.0f"|format(question.answer.feedback.score) }}/100</p>
+        {% if question.answer.feedback.strengths %}<p><strong>Strengths:</strong> {{ question.answer.feedback.strengths }}</p>{% endif %}
+        {% if question.answer.feedback.weaknesses %}<p><strong>Weaknesses:</strong> {{ question.answer.feedback.weaknesses }}</p>{% endif %}
+        {% if question.answer.feedback.suggestions %}<p><strong>Suggestion:</strong> {{ question.answer.feedback.suggestions }}</p>{% endif %}
+      {% endif %}
+    </section>
+  {% endfor %}
+
+  <a class="btn btn-secondary" href="{{ url_for('web.index') }}">&larr; Start a new session</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Interview Question{% endblock %}
+{% block content %}
+  <section class="card">
+    <div class="progress-row">
+      <span class="progress-label">Question {{ answered + 1 }} of {{ total }}</span>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: {{ (answered / total * 100) if total else 0 }}%;"></div>
+      </div>
+    </div>
+
+    {% if error %}
+      <p class="error" role="alert">{{ error }}</p>
+    {% endif %}
+
+    <p class="pill-tag">{{ question.type|capitalize }} question</p>
+    <h2>{{ question.text }}</h2>
+
+    <form action="{{ url_for('web.interview_answer_view', session_uuid=session.session_uuid) }}" method="post">
+      <input type="hidden" name="question_id" value="{{ question.id }}">
+      <div class="form-group">
+        <label for="answer_text">Your answer</label>
+        <textarea id="answer_text" name="answer_text" rows="8"
+          placeholder="Type your answer here, or record a voice answer below...">{{ prefill_answer or "" }}</textarea>
+        <div class="voice-controls">
+          <button type="button" class="btn btn-secondary" data-voice-record
+            data-transcribe-url="{{ url_for('web.interview_transcribe_view', session_uuid=session.session_uuid) }}">
+            Record voice answer
+          </button>
+          <span class="hint" data-voice-status></span>
+        </div>
+      </div>
+      <button type="submit">Submit answer</button>
+    </form>
+  </section>
+{% endblock %}

@@ -369,3 +369,64 @@ button:active, .btn:active { transform: translateY(1px); }
 .job-result .summary { margin: 0 0 0.9rem; font-size: 0.9rem; }
 .job-result form { margin: 0; }
 .job-result button { font-size: 0.88rem; padding: 0.5rem 1rem; }
+
+/* ---------------------------------------------------------------------
+   Interview session (WP-04–WP-07)
+   ------------------------------------------------------------------- */
+.progress-row { margin-bottom: 1.25rem; }
+.progress-label {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.progress-track {
+  height: 0.4rem;
+  background: var(--color-surface-alt);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.pill-tag {
+  display: inline-block;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-dark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  margin-bottom: 0.6rem;
+}
+@media (prefers-color-scheme: dark) {
+  .pill-tag { color: var(--color-accent); }
+}
+
+.score-display {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-accent-dark);
+  margin: 0 0 1.25rem;
+}
+.score-display span { font-size: 1.2rem; font-weight: 500; color: var(--color-muted); }
+@media (prefers-color-scheme: dark) {
+  .score-display { color: var(--color-accent); }
+}
+
+.voice-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+}
+.voice-controls button { padding: 0.45rem 0.9rem; font-size: 0.85rem; }
+.voice-controls [data-voice-status] { font-size: 0.82rem; }

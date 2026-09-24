@@ -1,6 +1,6 @@
-"""Question Generator component (Component Diagram, Figure 5) — stub.
+"""Question Generator component (Component Diagram, Figure 5) — WP-04.
 
-Planned for WP-04 (FR-06, FR-07, FR-08). See `generator.py`.
+See `generator.py` for FR-07 and FR-08.
 """
 from .generator import QuestionDraft, QuestionGenerationError, generate_questions
 

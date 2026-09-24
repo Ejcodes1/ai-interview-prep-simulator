@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Extraction Results{% endblock %}
 {% block content %}
+  {% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+  {% endif %}
+
   <section class="card">
     <h2>Extracted role &amp; skills</h2>
     {% if result.role %}
@@ -29,11 +33,24 @@
     </section>
   </div>
 
-  <p class="next-steps">
-    Next: tailored question generation, text/voice answer capture, and
-    AI-scored feedback will build on this extracted data in later work
-    packages.
-  </p>
+  <section class="card">
+    <h2>Ready to practice?</h2>
+    <p>
+      Generates a tailored set of interview questions from the resume and
+      job description above (FR-07), then walks you through answering
+      them one at a time with AI-scored feedback.
+    </p>
+    <form action="{{ url_for('web.interview_start_view') }}" method="post">
+      <input type="hidden" name="resume_text" value="{{ result.resume_text }}">
+      <input type="hidden" name="job_description_text" value="{{ result.job_description_text }}">
+      <input type="hidden" name="role" value="{{ result.role or '' }}">
+      <input type="hidden" name="resume_filename" value="{{ resume_filename or '' }}">
+      {% for skill in result.skills %}
+        <input type="hidden" name="skills" value="{{ skill }}">
+      {% endfor %}
+      <button type="submit">Start interview</button>
+    </form>
+  </section>
 
   <a class="btn btn-secondary" href="{{ url_for('web.index') }}">&larr; Start over</a>
 {% endblock %}

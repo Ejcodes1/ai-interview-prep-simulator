@@ -1,6 +1,6 @@
-"""Speech-to-Text Transcriber component (Component Diagram, Figure 5) — stub.
+"""Speech-to-Text Transcriber component (Component Diagram, Figure 5) — WP-06.
 
-Planned for WP-06 (FR-10). See `transcriber.py`.
+See `transcriber.py` for FR-10.
 """
 from .transcriber import TranscriptionError, transcribe_audio
 
