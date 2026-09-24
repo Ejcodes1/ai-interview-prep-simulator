@@ -1,0 +1,31 @@
+# WP-09 / Phase 3 (Finalization): cloud deployment blueprint for Render.
+#
+# Render reads this file to configure the service automatically ("Blueprint"
+# deploy) instead of clicking through manual dashboard setup. Secrets
+# (sync: false) are never committed here — Render prompts for them once in
+# its dashboard and stores them itself.
+#
+# Free tier: no persistent disk is attached, so the SQLite database resets
+# whenever the service restarts or redeploys. That's consistent with NFR-03
+# (not permanently storing candidate data beyond a session) rather than a
+# workaround — it's disclosed as expected behavior in the abstract.
+services:
+  - type: web
+    name: ai-interview-prep-simulator
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ADZUNA_APP_ID
+        sync: false
+      - key: ADZUNA_APP_KEY
+        sync: false
+      - key: ADZUNA_COUNTRY
+        value: us
