@@ -43,6 +43,12 @@ def create_app(config_name: str | None = None) -> Flask:
 
     app.register_blueprint(web_bp)
 
+    # TEMPORARY — diagnosing a Render-only OpenAI connectivity failure.
+    # Remove this and app/web/debug_routes.py before final submission.
+    from .web.debug_routes import debug_bp
+
+    app.register_blueprint(debug_bp)
+
     with app.app_context():
         if not app.config.get("TESTING"):
             db.create_all()
