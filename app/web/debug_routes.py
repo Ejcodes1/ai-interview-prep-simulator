@@ -52,4 +52,35 @@ def network_check():
     except Exception as exc:
         results["httpx_http1_only"] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
 
+    # Reproduce the real failing code path exactly: the actual OpenAI SDK
+    # client, with the real key, doing a real GET (models.list) and then a
+    # real POST (chat.completions.create) with the same shape our
+    # question-generator uses. This isolates SDK-construction vs. the
+    # specific POST + JSON body + response_format combination.
+    import os
+
+    from openai import OpenAI
+
+    api_key = os.environ.get("OPENAI_API_KEY")
+    results["openai_key_present"] = bool(api_key)
+
+    try:
+        sdk_client = OpenAI(api_key=api_key, timeout=10)
+        r = sdk_client.models.list()
+        results["openai_sdk_models_list"] = {"ok": True, "count": len(r.data)}
+    except Exception as exc:
+        results["openai_sdk_models_list"] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+
+    try:
+        sdk_client = OpenAI(api_key=api_key, timeout=10)
+        r = sdk_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": "Respond with JSON: {\"status\": \"OK\"}"}],
+            response_format={"type": "json_object"},
+            timeout=10,
+        )
+        results["openai_sdk_chat_completion"] = {"ok": True, "content": r.choices[0].message.content}
+    except Exception as exc:
+        results["openai_sdk_chat_completion"] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+
     return jsonify(results)
