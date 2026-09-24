@@ -4,18 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}AI Interview Prep Simulator{% endblock %}</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A4%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('web.static', filename='css/style.css') }}">
 </head>
 <body>
   <header class="site-header">
-    <h1>AI Interview Prep Simulator</h1>
-    <p class="tagline">Practice for a real job posting, not a generic question bank.</p>
+    <div class="site-header-inner">
+      <h1>AI Interview Prep Simulator</h1>
+      <p class="tagline">Practice for a real job posting, not a generic question bank.</p>
+      <nav class="site-nav">
+        <a href="{{ url_for('web.index') }}"
+           class="{{ 'active' if request.endpoint in ('web.index', 'web.ingest_view', 'web.job_select_view') else '' }}">
+           Upload &amp; Extract
+        </a>
+        <a href="{{ url_for('web.job_search_form') }}"
+           class="{{ 'active' if request.endpoint in ('web.job_search_form', 'web.job_search_view') else '' }}">
+           Search Jobs
+        </a>
+      </nav>
+    </div>
   </header>
   <main class="container">
     {% block content %}{% endblock %}
   </main>
   <footer class="site-footer">
-    <p>Phase 1 Conception Report — WP-02: Resume/JD Ingestion &amp; Parser</p>
+    <p>AI Interview Prep Simulator — a university software engineering project</p>
   </footer>
   <script src="{{ url_for('web.static', filename='js/main.js') }}"></script>
 </body>

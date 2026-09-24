@@ -2,7 +2,7 @@
 {% block title %}Job Search Results{% endblock %}
 {% block content %}
   <section class="card">
-    <h2>Results for "{{ keyword }}" (FR-03)</h2>
+    <h2>Results for "{{ keyword }}"</h2>
 
     {% if warning %}
       <p class="warning" role="status">{{ warning }}</p>
@@ -17,11 +17,11 @@
           <input type="hidden" name="title" value="{{ job.title }}">
           <input type="hidden" name="company" value="{{ job.company }}">
           <input type="hidden" name="description" value="{{ job.description }}">
-          <button type="submit">Use this posting (FR-04)</button>
+          <button type="submit">Use this posting</button>
         </form>
       </div>
     {% endfor %}
   </section>
 
-  <p><a href="{{ url_for('web.job_search_form') }}">&larr; Search again</a></p>
+  <a class="back-link" href="{{ url_for('web.job_search_form') }}">&larr; Search again</a>
 {% endblock %}

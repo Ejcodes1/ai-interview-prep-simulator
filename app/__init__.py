@@ -17,7 +17,13 @@ from .extensions import db
 
 
 def create_app(config_name: str | None = None) -> Flask:
-    app = Flask(__name__, instance_relative_config=True)
+    # static_folder=None: there is no top-level app/static directory —
+    # static assets live under the web blueprint (app/web/static) instead.
+    # Leaving Flask's default app-level static route enabled would
+    # otherwise claim the /static/... URL prefix first and shadow the
+    # blueprint's own static route, which serves the CSS/JS that actually
+    # exist.
+    app = Flask(__name__, instance_relative_config=True, static_folder=None)
     app.config.from_object(get_config(config_name))
 
     os.makedirs(app.instance_path, exist_ok=True)

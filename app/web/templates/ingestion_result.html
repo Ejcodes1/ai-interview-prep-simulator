@@ -2,7 +2,7 @@
 {% block title %}Extraction Results{% endblock %}
 {% block content %}
   <section class="card">
-    <h2>Extracted role &amp; skills (FR-06)</h2>
+    <h2>Extracted role &amp; skills</h2>
     {% if result.role %}
       <p><strong>Detected role:</strong> {{ result.role }}</p>
     {% else %}
@@ -17,21 +17,23 @@
     </ul>
   </section>
 
-  <section class="card">
-    <h2>Resume text (preview)</h2>
-    <pre class="text-preview">{{ result.resume_text[:1000] }}{% if result.resume_text|length > 1000 %}…{% endif %}</pre>
-  </section>
+  <div class="preview-grid">
+    <section class="card">
+      <h3>Resume text</h3>
+      <pre class="text-preview">{{ result.resume_text[:1000] }}{% if result.resume_text|length > 1000 %}…{% endif %}</pre>
+    </section>
 
-  <section class="card">
-    <h2>Job description text (preview)</h2>
-    <pre class="text-preview">{{ result.job_description_text[:1000] }}{% if result.job_description_text|length > 1000 %}…{% endif %}</pre>
-  </section>
+    <section class="card">
+      <h3>Job description text</h3>
+      <pre class="text-preview">{{ result.job_description_text[:1000] }}{% if result.job_description_text|length > 1000 %}…{% endif %}</pre>
+    </section>
+  </div>
 
   <p class="next-steps">
-    Next: tailored question generation (WP-04), text/voice answer capture
-    (WP-05), and AI-scored feedback (WP-06) will build on this extracted
-    data in later work packages.
+    Next: tailored question generation, text/voice answer capture, and
+    AI-scored feedback will build on this extracted data in later work
+    packages.
   </p>
 
-  <p><a href="{{ url_for('web.index') }}">&larr; Start over</a></p>
+  <a class="btn btn-secondary" href="{{ url_for('web.index') }}">&larr; Start over</a>
 {% endblock %}
