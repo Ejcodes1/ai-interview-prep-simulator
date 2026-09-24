@@ -105,6 +105,35 @@ def network_check():
     except Exception as exc:
         results["proxy_env_vars_set"] = {"error": f"{type(exc).__name__}: {exc}"}
 
+    # If the SDK's own request signature (User-Agent + X-Stainless-* headers)
+    # is what's being blocked, a plain requests/httpx call to the exact same
+    # REST endpoint with the exact same auth but generic headers should
+    # succeed where the SDK fails — isolating the SDK's request shape as the
+    # cause rather than anything about Render's network path.
+    try:
+        import requests as _requests
+
+        r = _requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "gpt-4o-mini",
+                "messages": [{"role": "user", "content": "Respond with JSON: {\"status\": \"OK\"}"}],
+                "response_format": {"type": "json_object"},
+            },
+            timeout=10,
+        )
+        results["raw_requests_chat_completion"] = {
+            "ok": r.status_code == 200,
+            "status": r.status_code,
+            "body": r.text[:300],
+        }
+    except Exception as exc:
+        results["raw_requests_chat_completion"] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+
     try:
         sdk_client = OpenAI(api_key=api_key, timeout=10)
         r = sdk_client.chat.completions.create(
