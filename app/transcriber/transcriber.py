@@ -12,9 +12,12 @@ the user before submission).
 """
 from __future__ import annotations
 
+import logging
 import os
 
 from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL = "whisper-1"
 DEFAULT_TIMEOUT_SECONDS = 15
@@ -67,6 +70,7 @@ def transcribe_audio(
     except TranscriptionError:
         raise
     except Exception as exc:
+        logger.error("Transcription failed: %s: %s", type(exc).__name__, exc)
         raise TranscriptionError(
             "The transcription service is temporarily unavailable. "
             "Please try again, or type your answer instead."

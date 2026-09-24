@@ -27,11 +27,14 @@ to manual JD entry (FR-05).
 from __future__ import annotations
 
 import html
+import logging
 import os
 from dataclasses import dataclass, field
 from typing import Any, MutableMapping
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 ADZUNA_SEARCH_URL = "https://api.adzuna.com/v1/api/jobs/{country}/search/1"
 
@@ -163,6 +166,14 @@ def search_job_postings(
         response.raise_for_status()
         payload = response.json()
     except (requests.RequestException, ValueError) as exc:
+        response_obj = getattr(exc, "response", None)
+        logger.error(
+            "Adzuna search failed: %s: %s (status=%s, body=%s)",
+            type(exc).__name__,
+            exc,
+            getattr(response_obj, "status_code", None),
+            (getattr(response_obj, "text", "") or "")[:300],
+        )
         cached_results = _load_from_cache(cache)
         if cached_results:
             return JobSearchResponse(

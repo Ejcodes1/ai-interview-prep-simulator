@@ -18,10 +18,13 @@ TR-01 mitigation, rather than letting the model freewheel on format.
 from __future__ import annotations
 
 import json
+import logging
 import os
 from dataclasses import dataclass
 
 from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL = "gpt-4o-mini"
 DEFAULT_TIMEOUT_SECONDS = 10  # NFR-01: question generation completes within 10s.
@@ -117,6 +120,7 @@ def generate_questions(
     except QuestionGenerationError:
         raise
     except Exception as exc:
+        logger.error("Question generation failed: %s: %s", type(exc).__name__, exc)
         raise QuestionGenerationError(
             "The question-generation service is temporarily unavailable. "
             "Please try again shortly."

@@ -17,10 +17,13 @@ letting the model free-form its own criteria.
 from __future__ import annotations
 
 import json
+import logging
 import os
 from dataclasses import dataclass
 
 from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL = "gpt-4o-mini"
 DEFAULT_TIMEOUT_SECONDS = 15  # NFR-01: answer feedback within 15 seconds.
@@ -98,6 +101,7 @@ def evaluate_answer(
     except AnswerEvaluationError:
         raise
     except Exception as exc:
+        logger.error("Answer evaluation failed: %s: %s", type(exc).__name__, exc)
         raise AnswerEvaluationError(
             "The answer-evaluation service is temporarily unavailable. "
             "Please try again shortly."
