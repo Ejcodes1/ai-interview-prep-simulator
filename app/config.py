@@ -11,6 +11,8 @@ import os
 
 from dotenv import load_dotenv
 
+from .env_utils import clean_env
+
 load_dotenv()
 
 
@@ -24,10 +26,10 @@ class BaseConfig:
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024
 
     # --- External API credentials (WP-03, WP-04, WP-06) ---
-    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-    ADZUNA_APP_ID = os.environ.get("ADZUNA_APP_ID")
-    ADZUNA_APP_KEY = os.environ.get("ADZUNA_APP_KEY")
-    ADZUNA_COUNTRY = os.environ.get("ADZUNA_COUNTRY", "us")
+    OPENAI_API_KEY = clean_env("OPENAI_API_KEY")
+    ADZUNA_APP_ID = clean_env("ADZUNA_APP_ID")
+    ADZUNA_APP_KEY = clean_env("ADZUNA_APP_KEY")
+    ADZUNA_COUNTRY = clean_env("ADZUNA_COUNTRY", "us")
 
     # NFR-07: cap LLM calls per session to bound usage cost.
     MAX_LLM_CALLS_PER_SESSION = int(os.environ.get("MAX_LLM_CALLS_PER_SESSION", 20))

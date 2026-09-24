@@ -18,10 +18,11 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 from dataclasses import dataclass
 
 from openai import OpenAI
+
+from app.env_utils import clean_env
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +61,7 @@ class EvaluationResult:
 def _build_client(client: OpenAI | None, timeout: float) -> OpenAI:
     if client is not None:
         return client
-    api_key = os.environ.get("OPENAI_API_KEY")
+    api_key = clean_env("OPENAI_API_KEY")
     if not api_key:
         raise AnswerEvaluationError(
             "Answer evaluation is not configured (missing OPENAI_API_KEY)."
@@ -80,7 +81,7 @@ def evaluate_answer(
     if not answer_text or not answer_text.strip():
         raise AnswerEvaluationError("An answer is required before it can be evaluated.")
 
-    resolved_model = model or os.environ.get("OPENAI_MODEL", DEFAULT_MODEL)
+    resolved_model = model or clean_env("OPENAI_MODEL", DEFAULT_MODEL)
 
     user_prompt = f"Interview question:\n{question_text.strip()}\n\nCandidate's answer:\n{answer_text.strip()}"
 

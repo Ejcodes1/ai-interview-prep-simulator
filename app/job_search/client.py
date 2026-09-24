@@ -28,11 +28,12 @@ from __future__ import annotations
 
 import html
 import logging
-import os
 from dataclasses import dataclass, field
 from typing import Any, MutableMapping
 
 import requests
+
+from app.env_utils import clean_env
 
 logger = logging.getLogger(__name__)
 
@@ -86,8 +87,8 @@ def _resolve_credentials(app_id: str | None, app_key: str | None) -> tuple[str |
     # Read from the environment at call time (not import time) so
     # credentials set after process start, or monkeypatched in tests, work.
     return (
-        app_id or os.environ.get("ADZUNA_APP_ID"),
-        app_key or os.environ.get("ADZUNA_APP_KEY"),
+        app_id or clean_env("ADZUNA_APP_ID"),
+        app_key or clean_env("ADZUNA_APP_KEY"),
     )
 
 
@@ -146,7 +147,7 @@ def search_job_postings(
             "Enter a job description manually instead (FR-05)."
         )
 
-    resolved_country = country or os.environ.get("ADZUNA_COUNTRY", "us")
+    resolved_country = country or clean_env("ADZUNA_COUNTRY", "us")
     params = {
         "app_id": resolved_app_id,
         "app_key": resolved_app_key,

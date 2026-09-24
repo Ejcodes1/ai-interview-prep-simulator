@@ -13,9 +13,10 @@ the user before submission).
 from __future__ import annotations
 
 import logging
-import os
 
 from openai import OpenAI
+
+from app.env_utils import clean_env
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class TranscriptionError(Exception):
 def _build_client(client: OpenAI | None, timeout: float) -> OpenAI:
     if client is not None:
         return client
-    api_key = os.environ.get("OPENAI_API_KEY")
+    api_key = clean_env("OPENAI_API_KEY")
     if not api_key:
         raise TranscriptionError(
             "Voice transcription is not configured (missing OPENAI_API_KEY). "
@@ -55,7 +56,7 @@ def transcribe_audio(
     if not data:
         raise TranscriptionError("The recorded audio is empty.")
 
-    resolved_model = model or os.environ.get("WHISPER_MODEL", DEFAULT_MODEL)
+    resolved_model = model or clean_env("WHISPER_MODEL", DEFAULT_MODEL)
 
     try:
         # Client construction is inside this block too: an incompatible
