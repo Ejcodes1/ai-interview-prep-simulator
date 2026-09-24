@@ -119,6 +119,41 @@ def test_interview_answer_rejects_blank_answer(app, client, monkeypatch, sample_
     assert b"Please type an answer" in response.data
 
 
+def test_interview_answer_shows_clear_error_on_evaluation_failure_and_does_not_persist(
+    app, client, monkeypatch, sample_resume_filename
+):
+    """NFR-02 fault injection: the Answer Evaluator (an external API call)
+    fails mid-flow — the candidate must see a clear message, not a crash,
+    and the unscored answer must not be silently recorded as answered."""
+    from app.answer_evaluator import AnswerEvaluationError
+
+    _start_session(client, monkeypatch, sample_resume_filename)
+
+    def _raise(*_a, **_k):
+        raise AnswerEvaluationError(
+            "The answer-evaluation service is temporarily unavailable. "
+            "Please try again shortly."
+        )
+
+    monkeypatch.setattr(web_routes, "evaluate_answer", _raise)
+
+    with app.app_context():
+        session_uuid = InterviewSession.query.first().session_uuid
+        question_id = InterviewSession.query.first().questions[0].id
+
+    response = client.post(
+        f"/interview/{session_uuid}/answer",
+        data={"question_id": question_id, "answer_text": "A thoughtful answer."},
+    )
+
+    assert response.status_code == 400
+    assert b"temporarily unavailable" in response.data
+
+    with app.app_context():
+        question = InterviewSession.query.first().questions[0]
+        assert question.answer is None  # not persisted — retry is still possible
+
+
 def test_interview_summary_redirects_if_session_incomplete(
     app, client, monkeypatch, sample_resume_filename
 ):

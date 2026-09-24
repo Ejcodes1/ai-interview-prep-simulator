@@ -15,7 +15,7 @@ report (requirements, architecture, and planning this scaffold implements).
 | WP-05 | Answer capture (text + voice) & session UI (FR-09, FR-10) | **Implemented** |
 | WP-06 | Speech-to-text + LLM evaluation & scoring (FR-10–FR-13) | **Implemented** |
 | WP-07 | Feedback display, history & PDF export (FR-12, FR-14, FR-15) | **Implemented** |
-| WP-08 | Integration testing & bug fixing (FR-16, all NFRs) | In progress (unit + route tests cover each WP; no dedicated fault-injection pass yet) |
+| WP-08 | Integration testing & bug fixing (FR-16, all NFRs) | **Implemented** — 75 tests (unit + route + fault-injection); two real bugs found and fixed via live smoke testing |
 | WP-09 | Deployment & final documentation | **Implemented** — Dockerfile + docker-compose.yml, verified with a real `docker compose up` |
 
 The full practice flow — upload resume → paste or search a job description
