@@ -1,0 +1,15 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    env_file:
+      - .env
+    volumes:
+      # Persists the SQLite database and exported PDF reports across
+      # container restarts (Section 8, Table 8 note: "provisions the
+      # SQLite volume").
+      - instance-data:/app/instance
+
+volumes:
+  instance-data:

@@ -16,7 +16,7 @@ report (requirements, architecture, and planning this scaffold implements).
 | WP-06 | Speech-to-text + LLM evaluation & scoring (FR-10–FR-13) | **Implemented** |
 | WP-07 | Feedback display, history & PDF export (FR-12, FR-14, FR-15) | **Implemented** |
 | WP-08 | Integration testing & bug fixing (FR-16, all NFRs) | In progress (unit + route tests cover each WP; no dedicated fault-injection pass yet) |
-| WP-09 | Deployment & final documentation | Not started (Dockerfile/docker-compose still needed) |
+| WP-09 | Deployment & final documentation | **Implemented** — Dockerfile + docker-compose.yml, verified with a real `docker compose up` |
 
 The full practice flow — upload resume → paste or search a job description
 → generate tailored questions → answer by typing or recording voice →
@@ -85,6 +85,17 @@ Without a real `OPENAI_API_KEY`/`ADZUNA_APP_ID`/`ADZUNA_APP_KEY` in `.env`,
 the app still runs — each integration shows a clear "not configured"
 message and falls back to the manual-entry path instead of crashing
 (FR-16, NFR-02).
+
+## Run with Docker
+
+```bash
+cp .env.example .env   # then fill in real API keys
+docker compose up --build
+```
+
+Serves the app at http://127.0.0.1:8000/. The SQLite database and
+exported PDF reports persist in a named volume (`instance-data`) across
+container restarts.
 
 ## Test
 
