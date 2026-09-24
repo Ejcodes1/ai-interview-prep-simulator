@@ -183,7 +183,11 @@ def extract_skills(combined_text: str, min_skills: int = 5) -> list[str]:
     found: "OrderedDict[str, None]" = OrderedDict()
     lowered = combined_text.lower()
     for skill in SKILLS_LEXICON:
-        pattern = r"\b" + re.escape(skill.lower()) + r"\b"
+        # A trailing "s?" tolerates a simple plural (e.g. "REST APIs"
+        # matching the lexicon's "REST API") — without it, "\b" fails to
+        # find a word boundary between the "I" and the "s" and the match
+        # is silently dropped.
+        pattern = r"\b" + re.escape(skill.lower()) + r"s?\b"
         if re.search(pattern, lowered):
             found[skill] = None
 

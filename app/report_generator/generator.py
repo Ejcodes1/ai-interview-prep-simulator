@@ -1,8 +1,11 @@
 """PDF Report Generator component — STUB (planned for WP-07).
 
-Per the Component Diagram (Figure 5), this component receives the
-aggregated results from the Feedback & Scoring Engine and renders them as
-a downloadable PDF (Section 6: ReadinessReport.pdfPath).
+Per the Component Diagram (Figure 5, Phase 1 report v4), this is the third
+of three components that read from and write to the Session Store
+directly: it reads the complete session record — questions, answers,
+per-question feedback, and the aggregate score written by the Feedback &
+Scoring Engine — to build the exported PDF, then writes the resulting
+file's path back to the session (ReadinessReport.pdfPath, Section 6).
 
 Covers: FR-15 (export a feedback report as PDF containing questions,
 answers, scores, and suggestions).

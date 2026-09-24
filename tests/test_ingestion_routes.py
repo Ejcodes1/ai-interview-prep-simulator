@@ -1,7 +1,7 @@
 """Integration tests for the Web UI's ingestion routes (WP-02).
 
-Exercises the same flows as Table 9's manual test cases (TC-01, TC-05) but
-through the actual Flask routes, end to end.
+Exercises the same flows as Table 9's manual test cases (TC-01, TC-03,
+TC-10) but through the actual Flask routes, end to end.
 """
 from __future__ import annotations
 
@@ -17,11 +17,11 @@ def test_index_renders_upload_form(client):
 
 
 def test_ingest_view_returns_extracted_skills_and_role(
-    client, sample_resume_pdf_bytes, sample_job_description_text
+    client, sample_resume_pdf_bytes, sample_job_description_text, sample_resume_filename
 ):
-    """TC-03-adjacent: successful ingestion of resume + JD via the web form."""
+    """TC-01 + TC-03: resume upload plus manual JD entry, via the web form."""
     data = {
-        "resume": (io.BytesIO(sample_resume_pdf_bytes), "resume.pdf"),
+        "resume": (io.BytesIO(sample_resume_pdf_bytes), sample_resume_filename),
         "job_description": sample_job_description_text,
     }
 
@@ -31,7 +31,7 @@ def test_ingest_view_returns_extracted_skills_and_role(
 
     assert response.status_code == 200
     body = response.data.decode()
-    assert "Backend Software Engineer" in body
+    assert "Junior Backend Developer" in body
     assert "Python" in body
 
 
@@ -49,9 +49,9 @@ def test_ingest_view_rejects_missing_resume(client, sample_job_description_text)
 def test_ingest_view_rejects_unsupported_resume_type(
     client, sample_job_description_text
 ):
-    """TC-05: unsupported file type shows a clear error, no server crash."""
+    """TC-10: unsupported file type shows a clear error, no server crash."""
     data = {
-        "resume": (io.BytesIO(b"just text"), "resume.txt"),
+        "resume": (io.BytesIO(b"just text"), "resume_notes.txt"),
         "job_description": sample_job_description_text,
     }
 
@@ -63,8 +63,10 @@ def test_ingest_view_rejects_unsupported_resume_type(
     assert b"Unsupported file type" in response.data
 
 
-def test_ingest_view_requires_a_job_description(client, sample_resume_pdf_bytes):
-    data = {"resume": (io.BytesIO(sample_resume_pdf_bytes), "resume.pdf")}
+def test_ingest_view_requires_a_job_description(
+    client, sample_resume_pdf_bytes, sample_resume_filename
+):
+    data = {"resume": (io.BytesIO(sample_resume_pdf_bytes), sample_resume_filename)}
 
     response = client.post(
         "/ingest", data=data, content_type="multipart/form-data"

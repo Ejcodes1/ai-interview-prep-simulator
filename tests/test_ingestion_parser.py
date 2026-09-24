@@ -22,9 +22,9 @@ def _file_storage(data: bytes, filename: str) -> FileStorage:
 # --- FR-01: resume upload + text extraction --------------------------------
 
 
-def test_extract_resume_text_from_pdf(sample_resume_pdf_bytes):
+def test_extract_resume_text_from_pdf(sample_resume_pdf_bytes, sample_resume_filename):
     """TC-01: a valid PDF resume is accepted and its text is extracted."""
-    file_storage = _file_storage(sample_resume_pdf_bytes, "resume.pdf")
+    file_storage = _file_storage(sample_resume_pdf_bytes, sample_resume_filename)
 
     text = parser.extract_resume_text(file_storage)
 
@@ -42,7 +42,7 @@ def test_extract_resume_text_from_docx(sample_resume_docx_bytes):
 
 
 def test_extract_resume_text_rejects_unsupported_extension():
-    """TC-05: an unsupported file type produces a clear error, no crash."""
+    """TC-10: an unsupported file type produces a clear error, no crash."""
     file_storage = _file_storage(b"hello world", "resume.txt")
 
     with pytest.raises(parser.IngestionError, match="Unsupported file type"):
@@ -111,11 +111,15 @@ def test_extract_job_description_text_rejects_unsupported_file_extension():
 
 
 def test_extract_skills_finds_at_least_five_from_lexicon(sample_job_description_text):
+    """TC-04: at least 5 skills/terms are identified from the JD text."""
     skills = parser.extract_skills(sample_job_description_text)
 
     assert len(skills) >= 5
     assert "Python" in skills
-    assert "Docker" in skills
+    assert "Flask" in skills
+    assert "REST API" in skills
+    assert "SQL" in skills
+    assert "Git" in skills
 
 
 def test_extract_skills_uses_frequency_fallback_when_lexicon_is_sparse():
@@ -124,6 +128,20 @@ def test_extract_skills_uses_frequency_fallback_when_lexicon_is_sparse():
     skills = parser.extract_skills(text, min_skills=3)
 
     assert len(skills) >= 3
+
+
+def test_extract_skills_matches_plural_form_of_a_lexicon_term():
+    """Phase 1 report v4, Table 9 TC-04: the canonical JD text pluralizes
+    "REST API" as "REST APIs" — the lexicon entry must still match it."""
+    text = "Junior Backend Developer - Python, Flask, REST APIs, SQL, Git, 0-2 years experience."
+
+    skills = parser.extract_skills(text)
+
+    assert "REST API" in skills
+    assert "Python" in skills
+    assert "Flask" in skills
+    assert "SQL" in skills
+    assert "Git" in skills
 
 
 def test_extract_skills_returns_empty_for_blank_text():
@@ -150,22 +168,24 @@ def test_extract_role_returns_none_for_empty_text():
 
 
 def test_ingest_combines_resume_and_job_description(
-    sample_resume_pdf_bytes, sample_job_description_text
+    sample_resume_pdf_bytes, sample_job_description_text, sample_resume_filename
 ):
-    resume_file = _file_storage(sample_resume_pdf_bytes, "resume.pdf")
+    resume_file = _file_storage(sample_resume_pdf_bytes, sample_resume_filename)
 
     result = parser.ingest(
         resume_file, job_description_text=sample_job_description_text
     )
 
     assert "Jane Doe" in result.resume_text
-    assert "Acme Corp" in result.job_description_text
+    assert "Junior Backend Developer" in result.job_description_text
     assert len(result.skills) >= 5
-    assert result.role == "Backend Software Engineer"
+    assert result.role == "Junior Backend Developer"
 
 
-def test_ingest_raises_on_missing_job_description(sample_resume_pdf_bytes):
-    resume_file = _file_storage(sample_resume_pdf_bytes, "resume.pdf")
+def test_ingest_raises_on_missing_job_description(
+    sample_resume_pdf_bytes, sample_resume_filename
+):
+    resume_file = _file_storage(sample_resume_pdf_bytes, sample_resume_filename)
 
     with pytest.raises(parser.IngestionError):
         parser.ingest(resume_file)
