@@ -72,6 +72,40 @@ def network_check():
         results["openai_sdk_models_list"] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
 
     try:
+        import httpx
+
+        custom_http_client = httpx.Client(timeout=10, http2=False, trust_env=False)
+        sdk_client = OpenAI(api_key=api_key, timeout=10, http_client=custom_http_client)
+        r = sdk_client.models.list()
+        results["openai_sdk_custom_http_client"] = {"ok": True, "count": len(r.data)}
+    except Exception as exc:
+        results["openai_sdk_custom_http_client"] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+
+    # Isolate further: is it proxy env vars (trust_env) or HTTP/2 specifically?
+    try:
+        import httpx
+
+        c = httpx.Client(timeout=10, trust_env=False)
+        sdk_client = OpenAI(api_key=api_key, timeout=10, http_client=c)
+        r = sdk_client.models.list()
+        results["openai_sdk_no_trust_env_only"] = {"ok": True, "count": len(r.data)}
+    except Exception as exc:
+        results["openai_sdk_no_trust_env_only"] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+
+    try:
+        import httpx as _httpx  # noqa: F401  (proxy env inspection only)
+
+        proxy_env = {
+            k: os.environ.get(k)
+            for k in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY",
+                      "http_proxy", "https_proxy", "all_proxy", "no_proxy")
+            if os.environ.get(k) is not None
+        }
+        results["proxy_env_vars_set"] = proxy_env
+    except Exception as exc:
+        results["proxy_env_vars_set"] = {"error": f"{type(exc).__name__}: {exc}"}
+
+    try:
         sdk_client = OpenAI(api_key=api_key, timeout=10)
         r = sdk_client.chat.completions.create(
             model="gpt-4o-mini",
