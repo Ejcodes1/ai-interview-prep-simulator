@@ -1,0 +1,6 @@
+These are just some rough notes from my last mock interview, not an
+actual resume. Wanted to keep them somewhere before I forget:
+
+- practice STAR answers for the teamwork question
+- ask about their on-call rotation
+- follow up with recruiter by Friday
