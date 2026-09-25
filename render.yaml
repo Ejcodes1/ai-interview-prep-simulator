@@ -29,3 +29,5 @@ services:
         sync: false
       - key: ADZUNA_COUNTRY
         value: us
+      - key: MAX_LLM_CALLS_PER_SESSION
+        value: "50"
